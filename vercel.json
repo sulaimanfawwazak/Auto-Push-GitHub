@@ -1,9 +1,8 @@
 {
-  "jobs": {
-    "orchestrate": {
+  "crons": [
+    {
       "path": "/api/orchestrate",
-      "schedule": "30 21 * * *",
-      "timezone": "UTC"
+      "schedule": "0 21 * * *"
     }
-  }
+  ]
 }
