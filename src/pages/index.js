@@ -50,7 +50,7 @@ export default function Home() {
     }
 
     fetchHistory();
-  }, []);
+  }, [dateStr]);
 
   // if (loading) {
     // return (
@@ -71,7 +71,7 @@ export default function Home() {
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
           <div className="flex flex-col items-center space-y-4">
             <div className="w-12 h-12 border-4 border-gray-400 rounded-full border-t-black animate-spin"></div>
-            <p className="text-lg font-medium text-gray-700">Loading today's history...</p>
+            <p className="text-lg font-medium text-gray-700">Loading today&apos;s history...</p>
           </div>
         </div>
       </>
@@ -97,8 +97,8 @@ export default function Home() {
 
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
           <div className="max-w-md p-6 text-center bg-white shadow-md rounded-xl">
-            <h2 className="mb-4 text-2xl font-bold text-gray-800">No "Today In History" Added Today</h2>
-            <p className="text-gray-600">This is an automated GitHub Streak Saver. It seems like the dev already made a commit today, so no "Today In History" added.</p>
+            <h2 className="mb-4 text-2xl font-bold text-gray-800">No &quot;Today In History&quot; Added Today</h2>
+            <p className="text-gray-600">This is an automated GitHub Streak Saver. It seems like the dev already made a commit today, so no &quot;Today In History&quot; added.</p>
             <button 
               onClick={() => window.location.reload()} 
               className="px-4 py-2 mt-4 text-white transition-colors bg-indigo-600 rounded-md hover:bg-indigo-700"
