@@ -1,6 +1,11 @@
+import dotenv from 'dotenv';
+
+dotenv.config({ path: './.env' });
+
 export default async function handler(req, res) {
   try {
-    const baseUrl = 'http://localhost:3000'
+    // const baseUrl = 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     // 1. Check GitHub contributions
     const contribRes = await fetch(`${baseUrl}/api/check-contributions`);
