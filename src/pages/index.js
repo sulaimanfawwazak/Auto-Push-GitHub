@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { useEffect, useState } from "react";
 import { FaCode, FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import Head from "next/head";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -138,10 +139,18 @@ export default function Home() {
             {history.image_url && (
               <div className="relative h-48 md:h-64 lg:h-80">
                 <img 
-                  src={history.image_url} 
+                  // src={history.image_url} 
+                  src={`/api/proxy-image?url=${encodeURIComponent(history.image_url)}`} 
                   alt={history.title} 
                   className="object-cover w-full h-full"
                 />
+                {/* <Image
+                  src={history.image_url}
+                  alt={history.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 700px"
+                /> */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
               </div>
             )}
