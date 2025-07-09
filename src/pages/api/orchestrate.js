@@ -4,7 +4,7 @@ import { createCommit } from '@/lib/github';
 dotenv.config({ path: './.env' });
 
 const owner = 'sulaimanfawwazak';
-const repo = 'Auto-Push-GitHub';
+const repo = 'History-Dump';
 const today = new Date().toISOString().split('T')[0];
 const filePath = `history/${today}.md`;
 
