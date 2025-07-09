@@ -1,6 +1,12 @@
 import dotenv from 'dotenv';
+import { createCommit } from '@/lib/github';
 
 dotenv.config({ path: './.env' });
+
+const owner = 'sulaimanfawwazak';
+const repo = 'Auto-Push-GitHub';
+const today = new Date().toISOString().split('T')[0];
+const filePath = `history/${today}.md`;
 
 export default async function handler(req, res) {
   try {
@@ -12,7 +18,7 @@ export default async function handler(req, res) {
     const { contributions } = await contribRes.json();
 
     if (contributions > 0) {
-      return res.status(200).json({ message: "You already have contributions today!" });
+      return res.status(200).json({ message: "Already contributed today!" });
     }
 
     // 2. Generate "Today in History" if there's no contribution
@@ -44,7 +50,19 @@ export default async function handler(req, res) {
     const imageUrl = imageData.response;
     console.log(imageUrl);
 
-    // 4. Add the data to database
+    // 4. Push "Today in History" to GitHub
+    const fileContent = `# ${history.title}\n\n![${history.title}](${imageUrl})\n\n## ${history.date}\n\n${history.content}`
+    const commitMessage = `🤖 Automated: Add Today in History for ${today}: ${history.title}`;
+
+    await createCommit({
+      owner,
+      repo,
+      filePath,
+      content: fileContent,
+      commitMessage,
+    });
+
+    // 5. Add the data to database
     const addToDatabase = await fetch(`${baseUrl}/api/save-history`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -58,7 +76,6 @@ export default async function handler(req, res) {
     const saveRes = await addToDatabase.json();
     const saveData = saveRes.data;
 
-
     return res.status(200).json({
       message: "Generated new history due to no contributions in GitHub",
       data: saveData || null,
@@ -66,7 +83,7 @@ export default async function handler(req, res) {
 
     // Example:
     //    "title": "First Successful Human-Powered Flight",
-    //    "content": "On this day, Orville Wright piloted the Wright Flyer I, making the first successful self-propelled sustained flight.  The flight lasted just 12 seconds, covering a distance of 120 feet at Kitty Hawk, North Carolina.  This groundbreaking achievement marked a pivotal moment in aviation history, paving the way for future advancements in flight technology and air travel.  It forever changed how humanity interacted with the world.",
+    //    "content": "On this day, Orville Wright piloted the ...
     //    "date": "1903-12-17"
     //    "image_url": "https://...."
 
