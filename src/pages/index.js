@@ -99,12 +99,16 @@ export default function Home() {
           <div className="max-w-md p-6 text-center bg-white shadow-md rounded-xl">
             <h2 className="mb-4 text-2xl font-bold text-gray-800">No &quot;Today In History&quot; Added Today</h2>
             <p className="text-gray-600">This is an automated GitHub Streak Saver. It seems like the dev already made a commit today, so no &quot;Today In History&quot; added.</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-4 py-2 mt-4 text-white transition-colors bg-indigo-600 rounded-md hover:bg-indigo-700"
-            >
-              Try Again
-            </button>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <a
+                  href={`https://google.com/search?q=${encodeURIComponent("Today in History")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 font-medium text-white transition-colors bg-indigo-600 rounded-md hover:bg-indigo-700"
+                >
+                  Search It Instead
+                </a>
+              </div>
           </div>
         </div>
       </>
