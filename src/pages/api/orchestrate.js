@@ -19,11 +19,19 @@ export default async function handler(req, res) {
 
     if (contributions > 0) {
       const emailSubject = `[🤖 Auto Push - Not Initiated for ${today} ❌]`
-      const emailText = `No today's history is generated since there's already a contribution to GitHub today`;
+      const emailText = `No "Today in History" was generated, because a contribution was already made to GitHub today.`;
+      const emailHTML = `
+        <h2>🤖 Auto Push Skipped</h2>
+        <p>No <strong>Today in History</strong> was pushed because you've already made a GitHub contribution for <strong>${today}</strong>.</p>
+        <p>This automation is designed to only run if you haven't pushed anything yet today.</p>
+        <p>If you think this is a mistake, double check your <a href="https://github.com/sulaimanfawwazak" target="_blank">GitHub contributions graph</a>.</p>
+        <p>Cheers,<br><code>auto-push-bot</code> ☕️</p>
+      `;
       
       await sendEmail({
         subject: emailSubject,
-        text: emailText
+        text: emailText,
+        html: emailHTML,
       })
 
       return res.status(200).json({ message: "Already contributed today!" });
@@ -73,11 +81,21 @@ export default async function handler(req, res) {
     // 5. Send an Email
     const emailSubject = `[🤖 Auto Push - Initiated for ${today} ✅]`
     const emailText = `Today's history has been pushed to GitHub: ${history.title}\n\nDate: ${history.date}\n\n${history.content}\n\nImage: ${imageUrl}`;
+    const emailHTML = `
+      <h2>📝 Today's History</h2>
+      <p><strong>Title:</strong> ${history.title}</p>
+      <p><strong>Date:</strong> ${history.date}</p>
+      <p>${history.content}</p>
+      <img src="${imageUrl}" alt="${history.title}" style="max-width: 100%; border-radius: 8px;" />
+      <p><a href="https://github.com/sulaimanfawwazak/History-Dump" target="_blank">📂 View it on GitHub</a></p>
+    `
+      
+      await sendEmail({
+        subject: emailSubject,
+        text: emailText,
+        html: emailHTML,
+      })
 
-    await sendEmail({
-      subject: emailSubject,
-      text: emailText
-    })
 
     // 5. Add the data to database
     const addToDatabase = await fetch(`${baseUrl}/api/save-history`, {
