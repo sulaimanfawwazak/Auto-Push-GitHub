@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { createCommit } from '@/lib/github';
+import { sendEmail } from '@/lib/mailer';
 
 dotenv.config({ path: './.env' });
 
@@ -10,7 +11,6 @@ const filePath = `history/${today}.md`;
 
 export default async function handler(req, res) {
   try {
-    // const baseUrl = 'http://localhost:3000'
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     // 1. Check GitHub contributions
@@ -18,6 +18,14 @@ export default async function handler(req, res) {
     const { contributions } = await contribRes.json();
 
     if (contributions > 0) {
+      const emailSubject = `[🤖 Auto Push - Not Initiated for ${today} ❌]`
+      const emailText = `No today's history is generated since there's already a contribution to GitHub today`;
+      
+      await sendEmail({
+        subject: emailSubject,
+        text: emailText
+      })
+
       return res.status(200).json({ message: "Already contributed today!" });
     }
 
@@ -61,6 +69,15 @@ export default async function handler(req, res) {
       content: fileContent,
       commitMessage,
     });
+
+    // 5. Send an Email
+    const emailSubject = `[🤖 Auto Push - Initiated for ${today} ✅]`
+    const emailText = `Today's history has been pushed to GitHub: ${history.title}\n\nDate: ${history.date}\n\n${history.content}\n\nImage: ${imageUrl}`;
+
+    await sendEmail({
+      subject: emailSubject,
+      text: emailText
+    })
 
     // 5. Add the data to database
     const addToDatabase = await fetch(`${baseUrl}/api/save-history`, {
