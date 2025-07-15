@@ -13,7 +13,18 @@ export default async function handler(req, res) {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
-  const prompt = `Using only verifiable historical records, generate one "Today in History" event that occurred on this day in any year. Today's date in the form of YYYY-MM-DD is: ${dateStr}. Output only raw JSON (no markdown, backticks, or explanations) with the format: {"title": "Event Title (Title Case)", "content": "Event description (4-5 factual sentences)", "date": "YYYY-MM-DD (Date of the historical event)"}. Do NOT use today’s date as the event date. Ensure all facts are accurate and consistent with historical sources.`
+  
+  const prompt = `
+You are a highly accurate historical fact retrieval system. Your sole purpose is to generate EXACTLY 1 verified "Today in History" that MUST have occurred on ${day} of ${month} in any year. Do NOT select events from other days or months, even if they are historically significant. The event can be from any topic or field (e.g., sport, war, politics, religion, art, economic, science, discovery, culture, etc.).
+
+- The output MUST be in raw JSON format with no markdown, backticks, or any other formatting characters outside of the JSON structure itself, and MUST strictly follow this structure:
+
+{
+  "title": "Event Title (in Title Case)",
+  "content": "Brief but informative event summary in 4-5 sentences. Include relevant context such as location, key figures involved, or immediate impact. Focus on clarity and conciseness.",
+  "date": "YYYY-MM-DD" // This is the exact calendar date (year-month-day) when the event occurred.
+}
+`;
 
   try {
     const response = await ai.models.generateContent({
